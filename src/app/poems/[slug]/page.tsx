@@ -51,7 +51,7 @@ export default async function PoemPage({ params }: { params: Params }) {
 
   const { data: poem } = (await sb
     .from('poems')
-    .select('id, slug, title, excerpt, body, members_only, published, created_at')
+    .select('id, slug, title, excerpt, body, published, created_at')
     .eq('slug', slug)
     .maybeSingle()) as { data: Poem | null };
 
@@ -93,12 +93,6 @@ export default async function PoemPage({ params }: { params: Params }) {
               Poems
             </Link>{' '}
             {'\u00B7'} {formatDate(poem.created_at)}
-            {poem.members_only && (
-              <>
-                {' '}
-                {'\u00B7'} From the notebook
-              </>
-            )}
           </p>
           <h1 className="h-display">{poem.title}</h1>
 

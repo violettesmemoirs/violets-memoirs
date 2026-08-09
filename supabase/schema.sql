@@ -7,8 +7,7 @@ create extension if not exists pgcrypto;
 -- ---------------------------------------------------------------------------
 -- Profiles
 -- One row per signed-up user. Anonymous visitors ("readers") have no row.
--- role:      'admin' (Violette) or 'subscriber' (anyone with a free account)
--- is_member: true once someone is on the paid monthly plan
+-- role: 'admin' (Violette) or 'subscriber' (anyone with a free account)
 -- ---------------------------------------------------------------------------
 create table if not exists public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
@@ -16,8 +15,6 @@ create table if not exists public.profiles (
     check (char_length(display_name) between 1 and 60),
   role text not null default 'subscriber'
     check (role in ('admin', 'subscriber')),
-  is_member boolean not null default false,
-  stripe_customer_id text,
   created_at timestamptz not null default now()
 );
 
@@ -31,8 +28,8 @@ drop policy if exists "profiles_update_own" on public.profiles;
 create policy "profiles_update_own" on public.profiles
   for update using (auth.uid() = id) with check (auth.uid() = id);
 
--- Column-level privileges stop users from promoting themselves to admin or
--- flipping their own membership flag. They may only edit their display name.
+-- Column-level privileges stop users from promoting themselves to admin.
+-- They may only edit their display name.
 revoke update on table public.profiles from anon, authenticated;
 grant select on table public.profiles to anon, authenticated;
 grant update (display_name) on table public.profiles to authenticated;
@@ -77,21 +74,8 @@ as $$
   );
 $$;
 
-create or replace function public.is_paid_member()
-returns boolean
-language sql stable
-security definer
-set search_path = public
-as $$
-  select exists (
-    select 1 from public.profiles
-    where id = auth.uid() and (is_member = true or role = 'admin')
-  );
-$$;
-
 -- ---------------------------------------------------------------------------
 -- Poems
--- members_only = true keeps a piece behind the paid membership.
 -- ---------------------------------------------------------------------------
 create table if not exists public.poems (
   id uuid primary key default gen_random_uuid(),
@@ -99,7 +83,6 @@ create table if not exists public.poems (
   title text not null check (char_length(title) between 1 and 200),
   excerpt text check (char_length(excerpt) <= 400),
   body text not null check (char_length(body) between 1 and 40000),
-  members_only boolean not null default false,
   published boolean not null default true,
   created_at timestamptz not null default now()
 );
@@ -110,10 +93,7 @@ alter table public.poems enable row level security;
 
 drop policy if exists "poems_select_public" on public.poems;
 create policy "poems_select_public" on public.poems
-  for select using (
-    (published and (not members_only or public.is_paid_member()))
-    or public.is_admin()
-  );
+  for select using (published or public.is_admin());
 
 drop policy if exists "poems_admin_all" on public.poems;
 create policy "poems_admin_all" on public.poems
@@ -241,6 +221,35 @@ create policy "replies_delete_own_or_admin" on public.replies
   for delete using (auth.uid() = author_id or public.is_admin());
 
 -- ---------------------------------------------------------------------------
+-- Quick chat
+-- A single running feed on the forum page for short messages that don't
+-- need a full thread. Anyone can read; posting needs an account.
+-- ---------------------------------------------------------------------------
+create table if not exists public.chat_messages (
+  id uuid primary key default gen_random_uuid(),
+  author_id uuid not null references public.profiles (id) on delete cascade,
+  body text not null check (char_length(body) between 1 and 500),
+  created_at timestamptz not null default now()
+);
+
+create index if not exists chat_messages_created_at_idx
+  on public.chat_messages (created_at desc);
+
+alter table public.chat_messages enable row level security;
+
+drop policy if exists "chat_select" on public.chat_messages;
+create policy "chat_select" on public.chat_messages
+  for select using (true);
+
+drop policy if exists "chat_insert_own" on public.chat_messages;
+create policy "chat_insert_own" on public.chat_messages
+  for insert with check (auth.uid() = author_id);
+
+drop policy if exists "chat_delete_own_or_admin" on public.chat_messages;
+create policy "chat_delete_own_or_admin" on public.chat_messages
+  for delete using (auth.uid() = author_id or public.is_admin());
+
+-- ---------------------------------------------------------------------------
 -- After running this file:
 -- 1. Sign up through the site with Violette's email.
 -- 2. Promote that account to admin:
@@ -248,8 +257,4 @@ create policy "replies_delete_own_or_admin" on public.replies
 --    update public.profiles set role = 'admin'
 --    where id = (select id from auth.users where email = 'violette@example.com');
 --
--- 3. (Optional) Grant a member manually, without Stripe:
---
---    update public.profiles set is_member = true
---    where id = (select id from auth.users where email = 'friend@example.com');
 -- ---------------------------------------------------------------------------

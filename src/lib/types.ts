@@ -4,7 +4,6 @@ export type Poem = {
   title: string;
   excerpt: string | null;
   body: string;
-  members_only: boolean;
   published: boolean;
   created_at: string;
 };
@@ -13,7 +12,6 @@ export type Profile = {
   id: string;
   display_name: string;
   role: 'admin' | 'subscriber';
-  is_member: boolean;
   created_at: string;
 };
 
@@ -40,6 +38,14 @@ export type Reply = {
   thread_id: string;
   body: string;
   author_id: string;
+  created_at: string;
+  profiles?: { display_name: string } | null;
+};
+
+export type ChatMessage = {
+  id: string;
+  author_id: string;
+  body: string;
   created_at: string;
   profiles?: { display_name: string } | null;
 };

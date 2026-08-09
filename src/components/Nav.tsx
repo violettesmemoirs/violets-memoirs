@@ -36,8 +36,8 @@ export default function Nav() {
     <header className="nav">
       <nav className="nav__inner" aria-label="Main">
         <Link href="/" className="nav__brand">
-          <strong>Poetry</strong>
-          blog.
+          <strong>Violet&rsquo;s</strong>
+          Memoirs
         </Link>
         <ul className="nav__links">
           {LINKS.map((l) => (
@@ -52,15 +52,22 @@ export default function Nav() {
             </li>
           ))}
         </ul>
-        {signedIn ? (
-          <Link href="/account" className="nav__pill">
-            Account
-          </Link>
-        ) : (
-          <Link href="/login" className="nav__pill">
-            Sign in
-          </Link>
-        )}
+        <span className="nav__pill-wrap">
+          <span className="fireflies" aria-hidden="true">
+            <span className="firefly firefly--1" />
+            <span className="firefly firefly--2" />
+            <span className="firefly firefly--3" />
+          </span>
+          {signedIn ? (
+            <Link href="/account" className="nav__pill">
+              Account
+            </Link>
+          ) : (
+            <Link href="/login" className="nav__pill">
+              Sign in
+            </Link>
+          )}
+        </span>
       </nav>
     </header>
   );

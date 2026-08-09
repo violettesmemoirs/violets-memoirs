@@ -34,8 +34,8 @@ export default async function AdminPage() {
         <h1 className="h-display">The writing desk</h1>
         <p className="muted small" style={{ maxWidth: '58ch' }}>
           Publish a new poem here. Line breaks are kept exactly as you type
-          them. Tick &ldquo;members only&rdquo; to place a piece in the
-          notebook, behind the monthly membership.
+          them. Untick &ldquo;publish right away&rdquo; to save it as a draft
+          instead.
         </p>
         <PoemEditor />
       </div>

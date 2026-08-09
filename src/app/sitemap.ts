@@ -11,7 +11,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/poems`, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${SITE_URL}/about`, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE_URL}/forum`, changeFrequency: 'daily', priority: 0.6 },
-    { url: `${SITE_URL}/membership`, changeFrequency: 'monthly', priority: 0.5 },
   ];
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -24,7 +23,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .from('poems')
       .select('slug, created_at')
       .eq('published', true)
-      .eq('members_only', false)
       .order('created_at', { ascending: false })
       .limit(1000);
 

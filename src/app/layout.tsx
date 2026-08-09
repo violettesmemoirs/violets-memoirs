@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import Snowfall from '@/components/Snowfall';
 import './globals.css';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://violetsmemoirs.com';
@@ -84,6 +85,7 @@ export default function RootLayout({
         <a href="#main" className="skip-link">
           Skip to content
         </a>
+        <Snowfall />
         <div className="page">
           <Nav />
           <main id="main">{children}</main>

@@ -1,23 +1,23 @@
 # Violet's Memoirs
 
-A poetry blog for Violette. Next.js 15 (App Router) with Supabase for the
-database, auth, comments, likes, and the forum, plus optional Stripe for the
-monthly membership. Built to deploy on Vercel.
+Violette's poetry site. Next.js 15 (App Router) with Supabase for the
+database, auth, comments, likes, and the forum. Built to deploy on Vercel.
 
 ## What's here
 
 - Home, About, Poems, and Forum: the four tabs, styled after the homepage mock
-  (butter-cream ground, violet didone type, the snow-capped violet field).
+  (butter-cream ground, violet didone type, the snow-capped violet field,
+  now with drifting snow, snow-capped pines, and a couple of deeper indigo
+  blooms for more depth and color).
 - Poems with likes (works for anonymous readers too), comments, and a share
   button.
-- A forum where readers post ideas and requests. Anyone can read; posting
-  needs a free account.
-- Three levels: admin (Violette), subscriber (free account), reader (no
-  account needed, just visits and reads).
+- A forum with two ways to post: a quick chat for anything short, no form to
+  fill out, and a formal thread option for longer ideas or requests. Anyone
+  can read; posting needs a free account.
+- Two levels: admin (Violette) and reader (anyone with a free account can
+  comment and post; anyone at all, account or not, can read).
 - Sign in, sign up, forgot password, and reset password, all through Supabase
   Auth.
-- A members-only "notebook" (behind-the-scenes writing) unlocked by a monthly
-  Stripe subscription, or manually by the admin.
 - An admin writing desk at /admin for publishing poems.
 - SEO: per-page titles and descriptions, canonical URLs, Open Graph tags,
   JSON-LD structured data, sitemap.xml, robots.txt.
@@ -30,17 +30,17 @@ monthly membership. Built to deploy on Vercel.
    to start).
 2. Open SQL Editor -> New query, paste the whole of `supabase/schema.sql`,
    and run it. This creates every table, index, and Row Level Security policy.
+   It's safe to re-run later too (say, after an update to this project) --
+   objects are dropped and recreated where needed.
 3. In Authentication -> URL Configuration, set the Site URL to your deployed
    domain and add `https://your-domain.com/reset-password` to the redirect
    URLs (plus `http://localhost:3000/reset-password` for local work).
-4. Copy the Project URL, anon key, and service role key from
-   Project Settings -> API.
+4. Copy the Project URL and anon key from Project Settings -> API.
 
 ### 2. Environment variables
 
 Copy `.env.example` to `.env.local` and fill it in. On Vercel, add the same
-variables under Project Settings -> Environment Variables. The service role
-key and Stripe keys are server-only secrets; never put them in client code.
+variables under Project Settings -> Environment Variables.
 
 ### 3. Run locally
 
@@ -72,61 +72,37 @@ Vercel needs no adapter.)
 2. Import the repo at [vercel.com/new](https://vercel.com/new).
 3. Add the environment variables, deploy, and point your domain at it.
 
-### 6. Stripe (optional, for paid memberships)
-
-The site works fully without Stripe; the membership page will just say
-memberships aren't set up yet. Violette can also grant members by hand with
-the SQL at the bottom of `schema.sql`.
-
-To turn on paid memberships:
-
-1. In the Stripe dashboard, create a Product with a recurring monthly Price.
-   Copy the Price ID into `STRIPE_PRICE_ID`.
-2. Copy your secret key into `STRIPE_SECRET_KEY`.
-3. Add a webhook endpoint pointing at
-   `https://your-domain.com/api/stripe/webhook`, subscribed to
-   `checkout.session.completed` and `customer.subscription.deleted`. Copy the
-   signing secret into `STRIPE_WEBHOOK_SECRET`.
-
-When someone pays, the webhook flips `is_member` on their profile and the
-notebook unlocks. When their subscription is cancelled, it flips back.
-
-## How the three levels work
+## How the two levels work
 
 | Level | How they get it | What they can do |
 | --- | --- | --- |
-| Reader | Just visits, no account | Read everything public, like poems, share |
-| Subscriber | Free sign-up | All of the above, plus comment and post in the forum |
-| Admin | Set once via SQL (step 4) | All of the above, plus publish poems and moderate |
-
-Paid membership is a flag on top of a subscriber account (`is_member`), not a
-separate level, so a member keeps commenting and posting like any subscriber
-and also sees the notebook.
+| Reader | Just visits, no account | Read everything, like poems, share |
+| Reader with an account | Free sign-up | All of the above, plus comment and post in the forum |
+| Admin | Set once via SQL (step 4) | All of the above, plus publish poems |
 
 ## Security notes
 
 - Every table has Row Level Security on. Even if someone tampers with the
   client, the database refuses writes they aren't allowed to make.
-- Users cannot change their own `role` or `is_member`: column-level grants
-  only let them edit their display name. Promotion happens via SQL or the
-  Stripe webhook (which uses the server-only service role key).
+- Users cannot change their own `role`: column-level grants only let them
+  edit their display name. Promotion to admin only happens via SQL.
 - Middleware refreshes sessions and blocks `/admin` and `/account` for
   signed-out visitors; the database policies remain the real gate.
 - Security headers (X-Frame-Options, nosniff, HSTS, referrer and permissions
   policies) are set in `next.config.mjs`.
-- Poem bodies and comments render as plain text through React, so pasted
-  HTML or scripts show as text instead of running.
+- Poem bodies, comments, and chat messages render as plain text through
+  React, so pasted HTML or scripts show as text instead of running.
 - Passwords, sessions, and reset emails are handled by Supabase Auth; this
   code never sees or stores a password.
-- Worth adding later if the forum gets busy: Supabase Auth's built-in
+- Worth adding later if the forum or chat gets busy: Supabase Auth's built-in
   CAPTCHA option, and rate limits (Vercel Firewall or Upstash).
 
 ## SEO notes
 
 The technical side is done: unique titles and meta descriptions per page,
 canonical URLs, Open Graph and Twitter tags, JSON-LD (WebSite on every page,
-CreativeWork on each poem), a sitemap that includes every published public
-poem, robots.txt, semantic HTML, fast static rendering for the busiest pages,
+CreativeWork on each poem), a sitemap that includes every published poem,
+robots.txt, semantic HTML, fast static rendering for the busiest pages,
 and self-explanatory URLs like `/poems/the-color-of-evening`.
 
 Honest caveat: no code can guarantee the #1 spot on Google. Rankings depend
@@ -139,18 +115,33 @@ custom domain from day one.
 
 - The home page and poems index are statically cached and revalidate every
   60 seconds, so heavy traffic hits the CDN, not the database.
-- The flower field is inline SVG (a few KB, no image request) and fonts load
-  with `display=swap`, so text never blocks on them.
-- Interactive pieces (likes, comments, forms) are small client islands;
+- The flower field is inline SVG (a few KB, no image request), the ambient
+  snow is CSS-only, and fonts load with `display=swap`, so nothing blocks on
+  network requests. Both respect prefers-reduced-motion.
+- Interactive pieces (likes, comments, chat, forms) are small client islands;
   everything else is server-rendered.
+
+## Note on a past version
+
+An earlier draft of this project had a paid membership tier through Stripe.
+That's been removed at Violette's request -- everything published is simply
+public now. If your Supabase project still has the old `is_member` /
+`stripe_customer_id` columns from a previous run of `schema.sql`, they're
+harmless left as-is (nothing reads them anymore), but you can drop them with:
+
+```sql
+alter table public.profiles drop column if exists is_member;
+alter table public.profiles drop column if exists stripe_customer_id;
+alter table public.poems drop column if exists members_only;
+```
 
 ## Project map
 
 ```
 src/
   app/            pages and API routes (one folder per tab + auth pages)
-  components/     nav, footer, flower field, forms, like/share buttons
-  lib/            supabase clients (browser/server/public/admin), types, slug
+  components/     nav, footer, flower field, snowfall, forms, chat, likes
+  lib/            supabase clients (browser/server/public), types, slug
 supabase/
   schema.sql      run this once in the Supabase SQL editor
 ```

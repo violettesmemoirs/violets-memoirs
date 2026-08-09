@@ -23,16 +23,11 @@ export default async function AccountPage() {
 
   const { data: profile } = (await sb
     .from('profiles')
-    .select('id, display_name, role, is_member, created_at')
+    .select('id, display_name, role, created_at')
     .eq('id', user.id)
     .maybeSingle()) as { data: Profile | null };
 
-  const tier =
-    profile?.role === 'admin'
-      ? 'Administrator'
-      : profile?.is_member
-        ? 'Member (monthly plan)'
-        : 'Subscriber (free account)';
+  const tier = profile?.role === 'admin' ? 'Administrator' : 'Reader with an account';
 
   return (
     <section className="section">
@@ -48,16 +43,10 @@ export default async function AccountPage() {
           <p>
             <strong>Level:</strong> {tier}
           </p>
-          {!profile?.is_member && profile?.role !== 'admin' && (
-            <p>
-              Want the behind-the-scenes writing?{' '}
-              <Link href="/membership">See what membership includes.</Link>
-            </p>
-          )}
           {profile?.role === 'admin' && (
             <p>
               <Link href="/admin">Go to the writing desk</Link> to publish
-              poems and notebook entries.
+              poems.
             </p>
           )}
           <SignOutButton />

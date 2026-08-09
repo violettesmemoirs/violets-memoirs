@@ -13,9 +13,8 @@ async function latestPoems(): Promise<Poem[]> {
     if (!sb) return [];
     const { data } = await sb
       .from('poems')
-      .select('id, slug, title, excerpt, body, members_only, published, created_at')
+      .select('id, slug, title, excerpt, body, published, created_at')
       .eq('published', true)
-      .eq('members_only', false)
       .order('created_at', { ascending: false })
       .limit(3);
     return (data as Poem[]) ?? [];

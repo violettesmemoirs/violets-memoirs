@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
+      <FlowerField variant="garland" />
       <section className="section">
         <div className="wrap--narrow">
           <Reveal>

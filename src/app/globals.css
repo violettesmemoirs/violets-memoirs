@@ -101,6 +101,32 @@ svg {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+.snowfall {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.snowflake {
+  position: absolute;
+  top: -12px;
+  border-radius: 50%;
+  background: #ffffff;
+  animation-name: snow-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes snow-fall {
+  to {
+    transform: translate(var(--drift, 0px), 112vh);
+  }
 }
 
 .wrap {
@@ -207,6 +233,67 @@ main {
 
 .nav__pill:active {
   transform: scale(0.97);
+}
+
+.nav__pill-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.fireflies {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.firefly {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #f2e6a3;
+  box-shadow:
+    0 0 6px 2px rgba(242, 230, 163, 0.85),
+    0 0 14px 5px rgba(200, 231, 160, 0.4);
+  opacity: 0;
+  animation: firefly-drift 5.5s ease-in-out infinite;
+}
+
+.firefly--1 {
+  top: -10px;
+  left: -10px;
+  animation-delay: 0s;
+}
+
+.firefly--2 {
+  top: -6px;
+  right: -14px;
+  animation-delay: 1.6s;
+}
+
+.firefly--3 {
+  bottom: -12px;
+  left: 46%;
+  animation-delay: 3.1s;
+}
+
+@keyframes firefly-drift {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  20% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.45;
+    transform: translate(-5px, -9px);
+  }
+  80% {
+    opacity: 0.85;
+    transform: translate(4px, -3px);
+  }
 }
 
 @media (max-width: 720px) {
@@ -356,6 +443,23 @@ main {
   font-size: clamp(1.5rem, 3vw, 2.125rem);
   line-height: 1.15;
   margin: 0 0 1rem;
+}
+
+.h-section--small {
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  margin: 2.5rem 0 0.4rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .section {
@@ -632,6 +736,68 @@ main {
 
 /* ------------------------------------------------------------------ forum */
 
+.chat {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.chat__list {
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.chat__empty {
+  margin: 0.4rem 0;
+}
+
+.chat__msg {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.chat__author {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  color: var(--violet-deep);
+  margin-right: 0.5em;
+}
+
+.chat__body {
+  word-break: break-word;
+}
+
+.chat__form {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.75rem;
+  border-top: 1px solid var(--line);
+  background: var(--cream);
+}
+
+.chat__form input {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  padding: 10px 16px;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.chat__form input:focus {
+  outline: 2px solid var(--violet-deep);
+  outline-offset: 2px;
+}
+
 .thread-list {
   list-style: none;
   margin: 0;
@@ -671,6 +837,10 @@ main {
 
 .flower-field--hem svg {
   max-height: 130px;
+}
+
+.flower-field--garland svg {
+  max-height: 56px;
 }
 
 /* ----------------------------------------------------------------- footer */

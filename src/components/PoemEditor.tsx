@@ -9,7 +9,6 @@ export default function PoemEditor() {
   const [title, setTitle] = useState('');
   const [excerpt, setExcerpt] = useState('');
   const [body, setBody] = useState('');
-  const [membersOnly, setMembersOnly] = useState(false);
   const [published, setPublished] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -32,7 +31,6 @@ export default function PoemEditor() {
       title: title.trim(),
       excerpt: excerpt.trim() || null,
       body,
-      members_only: membersOnly,
       published,
     });
     if (err) {
@@ -46,7 +44,6 @@ export default function PoemEditor() {
       setTitle('');
       setExcerpt('');
       setBody('');
-      setMembersOnly(false);
       setPublished(true);
     }
     setBusy(false);
@@ -82,15 +79,6 @@ export default function PoemEditor() {
           style={{ minHeight: 320 }}
           required
         />
-      </div>
-      <div className="field field--check">
-        <input
-          id="pe-members"
-          type="checkbox"
-          checked={membersOnly}
-          onChange={(e) => setMembersOnly(e.target.checked)}
-        />
-        <label htmlFor="pe-members">Members only (goes in the notebook)</label>
       </div>
       <div className="field field--check">
         <input

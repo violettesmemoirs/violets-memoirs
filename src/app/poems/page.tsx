@@ -20,7 +20,7 @@ async function allPoems(): Promise<Poem[]> {
     if (!sb) return [];
     const { data } = await sb
       .from('poems')
-      .select('id, slug, title, excerpt, body, members_only, published, created_at')
+      .select('id, slug, title, excerpt, body, published, created_at')
       .eq('published', true)
       .order('created_at', { ascending: false })
       .limit(200);
