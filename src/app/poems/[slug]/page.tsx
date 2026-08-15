@@ -94,6 +94,11 @@ export default async function PoemPage({ params }: { params: Params }) {
             </Link>{' '}
             {'\u00B7'} {formatDate(poem.created_at)}
           </p>
+          {!poem.published && (
+            <p className="form__error" style={{ marginTop: 0 }}>
+              Draft &mdash; only you can see this page.
+            </p>
+          )}
           <h1 className="h-display">{poem.title}</h1>
 
           <div className="poem-body">{poem.body}</div>

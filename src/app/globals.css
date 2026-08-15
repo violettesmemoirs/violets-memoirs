@@ -550,6 +550,55 @@ main {
   align-self: flex-start;
 }
 
+.badge--live {
+  color: var(--leaf);
+  border-color: var(--leaf);
+}
+
+.badge--draft {
+  color: var(--bark-deep);
+  border-color: var(--bark);
+}
+
+/* -------------------------------------------------------------- admin list */
+
+.admin-list {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line);
+}
+
+.admin-list__row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.admin-list__title {
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.admin-list__meta {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.admin-list__date {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+}
+
 /* ------------------------------------------------------------- poem page */
 
 .poem-header {
