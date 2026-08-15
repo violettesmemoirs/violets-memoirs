@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import FlowerField from '@/components/FlowerField';
+import PageFade from '@/components/PageFade';
 import Reveal from '@/components/Reveal';
 import { supabasePublic } from '@/lib/supabase/public';
 import { formatDate } from '@/lib/slug';
@@ -27,7 +28,7 @@ export default async function HomePage() {
   const poems = await latestPoems();
 
   return (
-    <>
+    <PageFade>
       <section className="hero">
         <div className="wrap">
           <Reveal>
@@ -81,6 +82,6 @@ export default async function HomePage() {
       )}
 
       <FlowerField />
-    </>
+    </PageFade>
   );
 }

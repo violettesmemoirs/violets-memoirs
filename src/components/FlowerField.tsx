@@ -22,7 +22,6 @@ export default function FlowerField({
   const bloom = `vm-bloom-${uid}`;
   const bloomDeep = `vm-bloom-deep-${uid}`;
   const pine = `vm-pine-${uid}`;
-  const dusk = `vm-dusk-${uid}`;
 
   if (variant === 'garland') {
     return (
@@ -99,11 +98,6 @@ export default function FlowerField({
         focusable="false"
       >
         <defs>
-          <linearGradient id={dusk} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#4a3768" stopOpacity="0.38" />
-            <stop offset="55%" stopColor="#4a3768" stopOpacity="0" />
-          </linearGradient>
-
           <g id={pine}>
             <polygon points="-24,-8 24,-8 0,-34" fill="#33453b" />
             <polygon points="-18,-26 18,-26 0,-50" fill="#33453b" />
@@ -172,9 +166,6 @@ export default function FlowerField({
             <ellipse cx="11" cy="21" rx="7" ry="4.5" fill="#eee9f9" />
           </g>
         </defs>
-
-        {/* dusk wash for depth and color, sits behind everything */}
-        <rect x="0" y="0" width="1440" height="230" fill={`url(#${dusk})`} />
 
         {/* far layer: snow-capped pines, muted and behind the blooms */}
         <g opacity="0.6">

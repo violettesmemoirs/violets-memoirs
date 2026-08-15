@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import FlowerField from '@/components/FlowerField';
 import NewThreadForm from '@/components/NewThreadForm';
+import PageFade from '@/components/PageFade';
 import QuickChat from '@/components/QuickChat';
 import { supabaseServer } from '@/lib/supabase/server';
 import { formatDate } from '@/lib/slug';
@@ -50,9 +51,9 @@ export default async function ForumPage() {
   const [threads, chat] = await Promise.all([allThreads(), recentChat()]);
 
   return (
-    <>
+    <PageFade>
       <section className="section">
-        <div className="wrap--narrow">
+        <div className="wrap">
           <p className="eyebrow">The reader&rsquo;s corner</p>
           <h1 className="h-display">Forum</h1>
           <p className="muted" style={{ maxWidth: '58ch' }}>
@@ -101,6 +102,6 @@ export default async function ForumPage() {
         </div>
       </section>
       <FlowerField hem />
-    </>
+    </PageFade>
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import FlowerField from '@/components/FlowerField';
+import PageFade from '@/components/PageFade';
 import { supabasePublic } from '@/lib/supabase/public';
 import { formatDate } from '@/lib/slug';
 import type { Poem } from '@/lib/types';
@@ -34,7 +35,7 @@ export default async function PoemsPage() {
   const poems = await allPoems();
 
   return (
-    <>
+    <PageFade>
       <section className="section">
         <div className="wrap">
           <p className="eyebrow">The collection</p>
@@ -59,6 +60,6 @@ export default async function PoemsPage() {
         </div>
       </section>
       <FlowerField hem />
-    </>
+    </PageFade>
   );
 }

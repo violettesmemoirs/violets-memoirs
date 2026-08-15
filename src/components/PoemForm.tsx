@@ -15,6 +15,17 @@ type ExistingPoem = {
   published: boolean;
 };
 
+// Fire-and-forget: nudges the cached home/poems pages to update right away.
+// If it fails for any reason, the normal 60s ISR revalidation still catches
+// up on its own, so this is a nice-to-have, not a dependency.
+function revalidate(slug: string) {
+  fetch('/api/revalidate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ slug }),
+  }).catch(() => {});
+}
+
 /**
  * Handles both writing a brand new poem and editing an existing one
  * (published or draft). Pass `poem` to edit; omit it to create.
@@ -104,6 +115,7 @@ export default function PoemForm({ poem }: { poem?: ExistingPoem }) {
         } catch {
           // ignore
         }
+        revalidate(poem!.slug);
         router.refresh();
       }
     } else {
@@ -139,6 +151,7 @@ export default function PoemForm({ poem }: { poem?: ExistingPoem }) {
         } catch {
           // ignore
         }
+        revalidate(slug);
       }
     }
     setBusy(false);

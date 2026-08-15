@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import FlowerField from '@/components/FlowerField';
+import PageFade from '@/components/PageFade';
 
 export default function NotFound() {
   return (
-    <>
+    <PageFade>
       <section className="section">
         <div className="wrap--narrow">
           <p className="eyebrow">404</p>
@@ -20,6 +21,6 @@ export default function NotFound() {
         </div>
       </section>
       <FlowerField hem />
-    </>
+    </PageFade>
   );
 }

@@ -341,10 +341,10 @@ main {
   font-family: var(--font-script);
   font-weight: 400;
   text-transform: none;
-  font-size: 1.42em;
+  font-size: 1.18em;
   line-height: 0;
-  vertical-align: -0.08em;
-  margin-right: -0.14em;
+  vertical-align: -0.04em;
+  margin-right: 0.05em;
   color: var(--violet);
 }
 
@@ -478,7 +478,7 @@ main {
 
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
   padding: 0;
   margin: 0;
@@ -490,6 +490,7 @@ main {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 1.75rem;
+  max-width: 560px;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -884,12 +885,29 @@ main {
   line-height: 0;
 }
 
+.flower-field svg {
+  display: block;
+  width: 100%;
+}
+
 .flower-field--hem svg {
   max-height: 130px;
 }
 
 .flower-field--garland svg {
   max-height: 56px;
+}
+
+.page-fade {
+  background: linear-gradient(
+    to top,
+    #4f3f68 0,
+    #7c6a93 160px,
+    #b7abc4 380px,
+    #e4d9d0 600px,
+    var(--cream) 900px,
+    var(--cream) 100%
+  );
 }
 
 /* ----------------------------------------------------------------- footer */

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import FlowerField from '@/components/FlowerField';
+import PageFade from '@/components/PageFade';
 import Reveal from '@/components/Reveal';
 
 export const metadata: Metadata = {
@@ -11,8 +12,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <>
-      <FlowerField variant="garland" />
+    <PageFade>
       <section className="section">
         <div className="wrap--narrow">
           <Reveal>
@@ -47,6 +47,6 @@ export default function AboutPage() {
         </div>
       </section>
       <FlowerField hem />
-    </>
+    </PageFade>
   );
 }
